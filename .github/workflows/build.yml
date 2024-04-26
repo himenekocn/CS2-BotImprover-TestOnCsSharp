@@ -1,0 +1,37 @@
+name: Build plugin
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - '**.cs'
+      - '**.csproj'
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - '**.cs'
+      - '**.csproj'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Run build
+        run: dotnet build
+      - name: Create output directory
+        run: |
+          mkdir -p output/CS2-BotImprover
+          mv ./bin/Debug/net8.0/CS2-BotImprover.dll output/CS2-BotImprover/
+          mv ./bin/Debug/net8.0/CS2-BotImprover.pdb output/CS2-BotImprover/
+          mv ./bin/Debug/net8.0/CS2-BotImprover.deps.json output/CS2-BotImprover/
+      - name: Publish artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CS2-BotImprover-${{ github.sha }}
+          path: output
