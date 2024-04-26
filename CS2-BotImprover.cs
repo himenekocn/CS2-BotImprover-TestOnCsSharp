@@ -22,6 +22,9 @@ public class BotImprover : BasePlugin
     private MemoryFunctionWithReturn<float> CCSBot_UpKeepFunc =
         new("55 48 89 E5 41 57 41 56 41 55 41 54 49 89 FC 53 48 83 EC 38 4C 8B 2D 7D D9 FA 00", Addresses.ServerPath);
 
+    private MemoryFunctionVoid CCSBot_UpKeepFuncVoid =
+        new("55 48 89 E5 41 57 41 56 41 55 41 54 49 89 FC 53 48 83 EC 38 4C 8B 2D 7D D9 FA 00", Addresses.ServerPath);
+
     public override void Load(bool hotReload)
     {
         Console.WriteLine("======================================");
@@ -29,6 +32,7 @@ public class BotImprover : BasePlugin
         try
         {
             CCSBot_UpKeepFunc.Hook(Hook_CCSBot_UpKeep, HookMode.Pre);
+            CCSBot_UpKeepFuncVoid.Hook(Hook_CCSBot_UpKeepVoid, HookMode.Pre);
         }
         catch (Exception ex)
         {
@@ -42,9 +46,29 @@ public class BotImprover : BasePlugin
         Console.WriteLine("======================================");
     }
 
-    private HookResult Hook_CCSBot_UpKeep(DynamicHook hook)
+    private HookResult Hook_CCSBot_UpKeepVoid(DynamicHook hook)
     {
         try
+        {
+            Console.WriteLine("===============================================");
+            Console.WriteLine("CCSBot_UpKeep was fired!");
+            Console.WriteLine("call one: " + hook.GetParam<float>(0));
+            Console.WriteLine("call one: " + hook.GetParam<float>(1));
+            Console.WriteLine("===============================================");
+        catch (Exception ex)
+        {
+            if (ex.Message != "Invalid game event")
+            {
+                Console.WriteLine("[BotImprover] Hook Failed: " + ex.Message);
+                Logger.LogInformation("[BotImprover] Hook Failed: " + ex.Message);
+            }
+        }
+        return HookResult.Continue;
+    }
+
+    private HookResult Hook_CCSBot_UpKeep(DynamicHook hook)
+    {
+        /*try
         {
             hook.SetReturn<float>(0.0f);
             return HookResult.Changed;
@@ -56,7 +80,7 @@ public class BotImprover : BasePlugin
                 Console.WriteLine("[BotImprover] HookReturn Failed: " + ex.Message);
                 Logger.LogInformation("[BotImprover] HookReturn Failed: " + ex.Message);
             }
-        }
+        }*/
         return HookResult.Continue;
     }
 }
