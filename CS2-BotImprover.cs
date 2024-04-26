@@ -55,6 +55,7 @@ public class BotImprover : BasePlugin
             Console.WriteLine("call one: " + hook.GetParam<float>(0));
             Console.WriteLine("call one: " + hook.GetParam<float>(1));
             Console.WriteLine("===============================================");
+        }
         catch (Exception ex)
         {
             if (ex.Message != "Invalid game event")
