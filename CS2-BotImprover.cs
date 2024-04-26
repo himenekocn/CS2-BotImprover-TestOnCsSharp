@@ -5,7 +5,7 @@ using CounterStrikeSharp.API.Modules.Commands;
 using CounterStrikeSharp.API.Modules.Utils;
 using CounterStrikeSharp.API.Modules.Memory;
 using CounterStrikeSharp.API.Modules.Memory.DynamicFunctions;
-
+using Vector = CounterStrikeSharp.API.Modules.Utils.Vector;
 using Microsoft.Extensions.Logging;
 
 namespace BotImprover;
