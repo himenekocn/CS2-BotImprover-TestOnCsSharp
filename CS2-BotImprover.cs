@@ -26,14 +26,36 @@ public class BotImprover : BasePlugin
     {
         Console.WriteLine("======================================");
         Console.WriteLine("HIME BotImprover Load Start!");
-        CCSBot_UpKeepFunc.Hook(Hook_CCSBot_UpKeep, HookMode.Pre);
+        try
+        {
+            CCSBot_UpKeepFunc.Hook(Hook_CCSBot_UpKeep, HookMode.Pre);
+        }
+        catch (Exception ex)
+        {
+            if (ex.Message != "Invalid game event")
+            {
+                Console.WriteLine("[BotImprover] HookFailed :{ex.Message}");
+                Logger.LogInformation("[BotImprover] HookFailed :{ex.Message}");
+            }
+        }
         Console.WriteLine("HIME BotImprover Load Finish!");
         Console.WriteLine("======================================");
     }
 
     private HookResult Hook_CCSBot_UpKeep(DynamicHook hook)
     {
-        hook.SetReturn(0);
+        try
+        {
+            hook.SetReturn(0.0);
+        }
+        catch (Exception ex)
+        {
+            if (ex.Message != "Invalid game event")
+            {
+                Console.WriteLine("[BotImprover] HookReturn Failed :{ex.Message}");
+                Logger.LogInformation("[BotImprover] HookReturn Failed :{ex.Message}");
+            }
+        }
         return HookResult.Changed;
     }
 }
