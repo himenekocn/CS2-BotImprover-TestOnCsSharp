@@ -46,7 +46,7 @@ public class BotImprover : BasePlugin
     {
         try
         {
-            hook.SetReturn(0.0);
+            hook.SetReturn<floar>(0.0f);
         }
         catch (Exception ex)
         {
