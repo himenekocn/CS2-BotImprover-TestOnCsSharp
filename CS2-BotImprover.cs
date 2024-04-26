@@ -34,8 +34,8 @@ public class BotImprover : BasePlugin
         {
             if (ex.Message != "Invalid game event")
             {
-                Console.WriteLine("[BotImprover] HookFailed :{ex.Message}");
-                Logger.LogInformation("[BotImprover] HookFailed :{ex.Message}");
+                Console.WriteLine("[BotImprover] HookFailed: " + ex.Message);
+                Logger.LogInformation("[BotImprover] HookFailed: " + ex.Message);
             }
         }
         Console.WriteLine("HIME BotImprover Load Finish!");
@@ -52,8 +52,8 @@ public class BotImprover : BasePlugin
         {
             if (ex.Message != "Invalid game event")
             {
-                Console.WriteLine("[BotImprover] HookReturn Failed :{ex.Message}");
-                Logger.LogInformation("[BotImprover] HookReturn Failed :{ex.Message}");
+                Console.WriteLine("[BotImprover] HookReturn Failed: " + ex.Message);
+                Logger.LogInformation("[BotImprover] HookReturn Failed: " + ex.Message);
             }
         }
         return HookResult.Changed;
