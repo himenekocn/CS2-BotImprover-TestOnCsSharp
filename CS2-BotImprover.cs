@@ -47,6 +47,7 @@ public class BotImprover : BasePlugin
         try
         {
             hook.SetReturn<float>(0.0f);
+            return HookResult.Changed;
         }
         catch (Exception ex)
         {
@@ -56,6 +57,6 @@ public class BotImprover : BasePlugin
                 Logger.LogInformation("[BotImprover] HookReturn Failed: " + ex.Message);
             }
         }
-        return HookResult.Changed;
+        return HookResult.Continue;
     }
 }
