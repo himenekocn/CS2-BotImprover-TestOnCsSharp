@@ -19,7 +19,7 @@ public class BotImprover : BasePlugin
 
     public override string ModuleDescription => "BotImprover plugin";
 
-    private MemoryFunctionWithReturn<nint, string, vector, int, float, bool, float, bool> CCSBot_SetLookAtFunc =
+    private MemoryFunctionWithReturn<nint, string, Vector, int, float, bool, float, bool> CCSBot_SetLookAtFunc =
         new("55 48 89 E5 41 57 49 89 FF 41 56 45 89 C6 41 55 41 54 49 89 F4", Addresses.ServerPath);
 
     private MemoryFunctionVoid CCSBot_UpKeepFuncVoid =
