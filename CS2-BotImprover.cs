@@ -19,6 +19,14 @@ public enum DispositionType
     NUM_DISPOSITIONS
 };
 
+public enum PriorityType
+{
+	PRIORITY_LOW, 
+    PRIORITY_MEDIUM, 
+    PRIORITY_HIGH, 
+    PRIORITY_UNINTERRUPTABLE
+};
+
 public class BotImprover : BasePlugin
 {
     public override string ModuleName => "CS2 BotImprover Plugin";
@@ -30,7 +38,7 @@ public class BotImprover : BasePlugin
     public override string ModuleDescription => "BotImprover plugin";
 
     //client, desc, pos, pri, dur, clearIfClose, angleTolerance, attack
-    private MemoryFunctionWithReturn<nint, string, Vector, DispositionType, float, bool, float, bool> CCSBot_SetLookAtFunc =
+    private MemoryFunctionWithReturn<nint, string, Vector, PriorityType, float, bool, float, bool> CCSBot_SetLookAtFunc =
         new("55 48 89 E5 41 57 49 89 FF 41 56 45 89 C6 41 55 41 54 49 89 F4", Addresses.ServerPath);
 
     //private MemoryFunctionVoid CCSBot_UpKeepFuncVoid =
@@ -84,7 +92,7 @@ public class BotImprover : BasePlugin
             CCSBot bot = new CCSBot(hook.GetParam<nint>(0));
             CCSPlayerController player = bot.Controller;
             string Desc = hook.GetParam<string>(1);
-            Logger.LogInformation("[BotImprover] "+ bot.Name +" SetLookAt: " + hook.GetParam<string>(1));
+            //Logger.LogInformation("[BotImprover] "+ bot.Name +" SetLookAt: " + hook.GetParam<string>(1));
             if (Desc.Equals("Defuse bomb", StringComparison.OrdinalIgnoreCase))
             {
                 return HookResult.Continue;
@@ -111,6 +119,7 @@ public class BotImprover : BasePlugin
                 hook.SetParam<float>(4, 2.0f);
                 hook.SetParam<float>(5, 1);
                 hook.SetParam<float>(6, 1.2f);
+                hook.SetParam<PriorityType>(3, PriorityType.PRIORITY_HIGH);
                 return HookResult.Changed;
             }
             else if (Desc.Equals("Blind", StringComparison.OrdinalIgnoreCase))
@@ -138,6 +147,7 @@ public class BotImprover : BasePlugin
                 hook.SetParam<Vector>(2, fNadePos);
                 hook.SetParam<float>(4, 3.0f);
                 hook.SetParam<float>(6, 1.5f);
+                hook.SetParam<PriorityType>(3, PriorityType.PRIORITY_HIGH);
                 return HookResult.Changed;
             }
             else if (Desc.Equals("Noise", StringComparison.OrdinalIgnoreCase))
