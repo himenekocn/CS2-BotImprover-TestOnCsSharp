@@ -184,7 +184,7 @@ public class BotImprover : BasePlugin
     {
         try
         {
-            var CCSBot_BendLineOfSightFunc = VirtualFunction.Create<nint, Vector, Vector, Vector, float>(
+            var CCSBot_BendLineOfSightFunc = VirtualFunction.Create<nint, Vector, Vector, Vector, float, bool>(
                 "55 48 89 E5 41 57 49 89 D7 41 56 41 55 41 54 49 89 FC 53 48 89 F3 48 81 EC D8 01 00 00", Addresses.ServerPath
             );
 
