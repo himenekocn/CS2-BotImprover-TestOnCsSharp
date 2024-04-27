@@ -105,6 +105,7 @@ public class BotImprover : BasePlugin
         try
         {
             CCSBot bot = new CCSBot(hook.GetParam<nint>(0));
+            Logger.LogInformation("[BotImprover] CCSBot_PickNewAimSpot Get: " + bot.Name);
             Schema.SetSchemaValue(bot.Handle, "CCSBot", "m_targetSpot", new Vector(120, 120, 120));
             return HookResult.Handled;
         }
@@ -180,9 +181,10 @@ public class BotImprover : BasePlugin
             {
                 Vector fNadePos = hook.GetParam<Vector>(2);
                 Logger.LogInformation("[BotImprover] Avoid Flashbang: " + fNadePos.X + " " + fNadePos.Y + " " + fNadePos.Z);
-                CCSBot_BendLineOfSight(bot, bot.EyePosition, fNadePos, ref fNadePos, 140.0f);
-                Logger.LogInformation("[BotImprover] Avoid Flashbang Bend: " + fNadePos.X + " " + fNadePos.Y + " " + fNadePos.Z);
-                hook.SetParam<Vector>(2, fNadePos);
+                Vector nNadePos;
+                CCSBot_BendLineOfSight(bot, bot.EyePosition, fNadePos, ref nNadePos, 140.0f);
+                Logger.LogInformation("[BotImprover] Avoid Flashbang Bend: " + nNadePos.X + " " + nNadePos.Y + " " + nNadePos.Z);
+                hook.SetParam<Vector>(2, nNadePos);
                 hook.SetParam<float>(4, 2.0f);
                 hook.SetParam<float>(5, 1);
                 hook.SetParam<float>(6, 1.2f);
@@ -209,9 +211,10 @@ public class BotImprover : BasePlugin
             {
                 Vector fNadePos = hook.GetParam<Vector>(2);
                 Logger.LogInformation("[BotImprover] GrenadeThrow: " + fNadePos.X + " " + fNadePos.Y + " " + fNadePos.Z);
-                CCSBot_BendLineOfSight(bot, bot.EyePosition, fNadePos, ref fNadePos, 135.0f);
-                Logger.LogInformation("[BotImprover] GrenadeThrow Bend: " + fNadePos.X + " " + fNadePos.Y + " " + fNadePos.Z);
-                hook.SetParam<Vector>(2, fNadePos);
+                Vector nNadePos;
+                CCSBot_BendLineOfSight(bot, bot.EyePosition, fNadePos, ref nNadePos, 135.0f);
+                Logger.LogInformation("[BotImprover] GrenadeThrow Bend: " + nNadePos.X + " " + nNadePos.Y + " " + nNadePos.Z);
+                hook.SetParam<Vector>(2, nNadePos);
                 hook.SetParam<float>(4, 3.0f);
                 hook.SetParam<float>(6, 1.5f);
                 hook.SetParam<PriorityType>(3, PriorityType.PRIORITY_HIGH);
