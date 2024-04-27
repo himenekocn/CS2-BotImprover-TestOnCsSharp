@@ -63,8 +63,8 @@ public class BotImprover : BasePlugin
         {
             Logger.LogInformation("HIME BotImprover StartHook SetLookAt!");
             CCSBot_SetLookAtFunc.Hook(Hook_CCSBot_SetLookAt, HookMode.Pre);
-            Logger.LogInformation("HIME BotImprover StartHook BotCOS!");
-            BotCOSFunc.Hook(Hook_BotCOS, HookMode.Pre);
+            //Logger.LogInformation("HIME BotImprover StartHook BotCOS!");
+            //BotCOSFunc.Hook(Hook_BotCOS, HookMode.Pre);
             //Logger.LogInformation("HIME BotImprover StartHook BotSIN!");
             //BotSINFunc.Hook(Hook_BotSIN, HookMode.Pre);
             Logger.LogInformation("HIME BotImprover StartHook PickNewAimSpot!");
@@ -219,6 +219,7 @@ public class BotImprover : BasePlugin
             }
             else if (Desc.Equals("Noise", StringComparison.OrdinalIgnoreCase))
             {
+                Logger.LogInformation("[BotImprover] LookupBone: " + LookupBone(bot.Controller, "head_0"));
                 Vector fNoisePos = hook.GetParam<Vector>(2);
                 hook.SetParam<Vector>(2, new Vector(fNoisePos.X, fNoisePos.Y, fNoisePos.Z + 25.0f));
                 return HookResult.Changed;
@@ -258,11 +259,11 @@ public class BotImprover : BasePlugin
         return HookResult.Continue;
     }
 
-    public bool CCSBot_BendLineOfSight(CCSBot bot, Vector Eye, Vector Point, Vector Bend, float AngleLimit)
+    public bool CCSBot_BendLineOfSight(CCSBot bot, Vector Eye, Vector Point, ref Vector Bend, float AngleLimit)
     {
         try
         {
-            var CCSBot_BendLineOfSightFunc = VirtualFunction.Create<nint, Vector, Vector, Vector, float, bool>(
+            var CCSBot_BendLineOfSightFunc = VirtualFunction.Create<nint, Vector, Vector, ref Vector, float, bool>(
                 "55 48 89 E5 41 57 49 89 D7 41 56 41 55 41 54 49 89 FC 53 48 89 F3 48 81 EC D8 01 00 00", Addresses.ServerPath
             );
 
@@ -296,5 +297,22 @@ public class BotImprover : BasePlugin
         }
     }
 
-
+    public int LookupBone(CCSPlayerController player, string BoneName)
+    {
+        try
+        {
+            var LookupBoneFunc = VirtualFunction.CreateVoid<nint, string, int>(
+                "55 48 89 E5 41 57 41 56 41 55 41 54 53 48 BB 00 00 C0 7F 00 00 C0 7F", Addresses.ServerPath
+            );
+            return LookupBoneFunc(player.Handle, BoneName);
+        }
+        catch (Exception ex)
+        {
+            if (ex.Message != "Invalid game event")
+            {
+                Logger.LogInformation("[BotImprover] Attack Failed: " + ex.Message);
+            }
+        }
+        return 0;
+    }
 }
