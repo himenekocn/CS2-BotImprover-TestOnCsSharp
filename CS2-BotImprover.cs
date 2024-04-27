@@ -132,7 +132,7 @@ public class BotImprover : BasePlugin
             {
                 Vector fNadePos = hook.GetParam<Vector>(2);
                 Logger.LogInformation("[BotImprover] GrenadeThrow: " + fNadePos.X + " " + fNadePos.Y + " " + fNadePos.Z);
-                CCSBot_BendLineOfSight(player, player.PlayerPawn.Bot.EyePosition, fNadePos, fNadePos, 135.0f);
+                CCSBot_BendLineOfSight(player, player.PlayerPawn.Value.Bot.EyePosition, fNadePos, fNadePos, 135.0f);
                 Logger.LogInformation("[BotImprover] GrenadeThrow Bend: " + fNadePos.X + " " + fNadePos.Y + " " + fNadePos.Z);
                 hook.SetParam<Vector>(2, fNadePos);
                 hook.SetParam<float>(4, 3.0f);
