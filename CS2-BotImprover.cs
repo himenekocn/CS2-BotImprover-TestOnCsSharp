@@ -68,7 +68,7 @@ public class BotImprover : BasePlugin
             //Logger.LogInformation("HIME BotImprover StartHook BotSIN!");
             //BotSINFunc.Hook(Hook_BotSIN, HookMode.Pre);
             Logger.LogInformation("HIME BotImprover StartHook PickNewAimSpot!");
-            CCSBot_PickNewAimSpotFunc.Hook(Hook_CCSBot_PickNewAimSpot, HookMode.Post);
+            CCSBot_PickNewAimSpotFunc.Hook(Hook_CCSBot_PickNewAimSpot, HookMode.Pre);
             //CCSBot_UpKeepFuncVoid.Hook(Hook_CCSBot_UpKeepVoid, HookMode.Pre);
         }
         catch (Exception ex)
@@ -219,7 +219,6 @@ public class BotImprover : BasePlugin
             }
             else if (Desc.Equals("Noise", StringComparison.OrdinalIgnoreCase))
             {
-                Logger.LogInformation("[BotImprover] LookupBone: " + LookupBone(bot.Controller, "head_0"));
                 Vector fNoisePos = hook.GetParam<Vector>(2);
                 hook.SetParam<Vector>(2, new Vector(fNoisePos.X, fNoisePos.Y, fNoisePos.Z + 25.0f));
                 return HookResult.Changed;
@@ -283,10 +282,10 @@ public class BotImprover : BasePlugin
     {
         try
         {
-            var CCSBot_BendLineOfSightFunc = VirtualFunction.CreateVoid<nint, nint>(
+            var CCSBot_AttackFunc = VirtualFunction.CreateVoid<nint, nint>(
                 "48 85 F6 0F 84 ? ? ? ? 55 48 89 E5 41 55 49 89 F5", Addresses.ServerPath
             );
-            CCSBot_BendLineOfSightFunc(bot.Handle, player.Handle);
+            CCSBot_AttackFunc(bot.Handle, player.Handle);
         }
         catch (Exception ex)
         {
@@ -310,7 +309,7 @@ public class BotImprover : BasePlugin
         {
             if (ex.Message != "Invalid game event")
             {
-                Logger.LogInformation("[BotImprover] Attack Failed: " + ex.Message);
+                Logger.LogInformation("[BotImprover] LookupBone Failed: " + ex.Message);
             }
         }
         return 0;
