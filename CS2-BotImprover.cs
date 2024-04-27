@@ -30,7 +30,7 @@ public class BotImprover : BasePlugin
     public override string ModuleDescription => "BotImprover plugin";
 
     //client, desc, pos, pri, dur, clearIfClose, angleTolerance, attack
-    private MemoryFunctionWithReturn<CCSPlayerController, string, Vector, DispositionType, float, bool, float, bool> CCSBot_SetLookAtFunc =
+    private MemoryFunctionWithReturn<nint, string, Vector, DispositionType, float, bool, float, bool> CCSBot_SetLookAtFunc =
         new("55 48 89 E5 41 57 49 89 FF 41 56 45 89 C6 41 55 41 54 49 89 F4", Addresses.ServerPath);
 
     //private MemoryFunctionVoid CCSBot_UpKeepFuncVoid =
@@ -81,9 +81,9 @@ public class BotImprover : BasePlugin
     {
         try
         {
-            CCSPlayerController player = hook.GetParam<CCSPlayerController>(0);
+            CCSPlayerController player = new CCSPlayerController(hook.GetParam<nint>(0));
             string Desc = hook.GetParam<string>(1);
-            Logger.LogInformation("[BotImprover] SetLookAt: " + hook.GetParam<string>(1));
+            Logger.LogInformation("[BotImprover] "+ player.PlayerName +" SetLookAt: " + hook.GetParam<string>(1));
             if (Desc.Equals("Defuse bomb", StringComparison.OrdinalIgnoreCase))
             {
                 return HookResult.Continue;
