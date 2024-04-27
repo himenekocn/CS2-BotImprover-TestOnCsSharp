@@ -90,9 +90,9 @@ public class BotImprover : BasePlugin
         try
         {
             CCSBot bot = new CCSBot(hook.GetParam<nint>(0));
-            CCSPlayerController player = bot.Controller;
+            //CCSPlayerController player = bot.Controller;
             string Desc = hook.GetParam<string>(1);
-            //Logger.LogInformation("[BotImprover] "+ bot.Name +" SetLookAt: " + hook.GetParam<string>(1));
+            Logger.LogInformation("[BotImprover] "+ bot.Name +" SetLookAt: " + hook.GetParam<string>(1));
             if (Desc.Equals("Defuse bomb", StringComparison.OrdinalIgnoreCase))
             {
                 return HookResult.Continue;
@@ -113,7 +113,7 @@ public class BotImprover : BasePlugin
             {
                 Vector fNadePos = hook.GetParam<Vector>(2);
                 Logger.LogInformation("[BotImprover] Avoid Flashbang: " + fNadePos.X + " " + fNadePos.Y + " " + fNadePos.Z);
-                CCSBot_BendLineOfSight(player, bot.EyePosition, fNadePos, fNadePos, 140.0f);
+                CCSBot_BendLineOfSight(bot, bot.EyePosition, fNadePos, fNadePos, 140.0f);
                 Logger.LogInformation("[BotImprover] Avoid Flashbang Bend: " + fNadePos.X + " " + fNadePos.Y + " " + fNadePos.Z);
                 hook.SetParam<Vector>(2, fNadePos);
                 hook.SetParam<float>(4, 2.0f);
@@ -142,7 +142,7 @@ public class BotImprover : BasePlugin
             {
                 Vector fNadePos = hook.GetParam<Vector>(2);
                 Logger.LogInformation("[BotImprover] GrenadeThrow: " + fNadePos.X + " " + fNadePos.Y + " " + fNadePos.Z);
-                CCSBot_BendLineOfSight(player, bot.EyePosition, fNadePos, fNadePos, 135.0f);
+                CCSBot_BendLineOfSight(bot, bot.EyePosition, fNadePos, fNadePos, 135.0f);
                 Logger.LogInformation("[BotImprover] GrenadeThrow Bend: " + fNadePos.X + " " + fNadePos.Y + " " + fNadePos.Z);
                 hook.SetParam<Vector>(2, fNadePos);
                 hook.SetParam<float>(4, 3.0f);
@@ -191,7 +191,7 @@ public class BotImprover : BasePlugin
         return HookResult.Continue;
     }
 
-    public bool CCSBot_BendLineOfSight(CCSPlayerController player, Vector Eye, Vector Point, Vector Bend, float AngleLimit)
+    public bool CCSBot_BendLineOfSight(CCSBot bot, Vector Eye, Vector Point, Vector Bend, float AngleLimit)
     {
         try
         {
@@ -199,7 +199,7 @@ public class BotImprover : BasePlugin
                 "55 48 89 E5 41 57 49 89 D7 41 56 41 55 41 54 49 89 FC 53 48 89 F3 48 81 EC D8 01 00 00", Addresses.ServerPath
             );
 
-            return CCSBot_BendLineOfSightFunc(player.Handle, Eye, Point, Bend, AngleLimit);
+            return CCSBot_BendLineOfSightFunc(bot.Handle, Eye, Point, Bend, AngleLimit);
         }
         catch (Exception ex)
         {
