@@ -46,7 +46,7 @@ public class BotImprover : BasePlugin
 
     //In CCSBot::Upkeep code bottom
     private MemoryFunctionWithReturn<float, float> BotCOSFunc =
-        new("F3 0F 5C 05 ? ? ? ? F3 0F 10 0D ? ? ? ?", Addresses.ServerPath);
+        new("F3 0F 10 0D ? ? ? ? F3 0F 10 15 ? ? ? ? F3 0F 59 C8 F3 0F 58 0D ? ? ? ? 66 0F 3A 0A C9 ? F3 0F 59 CA F3 0F 5C C1 66 0F EF C9 0F 2F C8 76 ? F3 0F 58 C2 F3 0F 59 05 ? ? ? ? 48 8D 15 ? ? ? ? F3 0F 5E C2 F3 0F 2C C0 48 98 F3 0F 10 04 82 C3 66 2E 0F 1F 84 00", Addresses.ServerPath);
     //In CCSBot::Upkeep code bottom
     private MemoryFunctionWithReturn<float, float> BotSINFunc =
         new("F3 0F 5C 05 D4 9E C1 00", Addresses.ServerPath);
