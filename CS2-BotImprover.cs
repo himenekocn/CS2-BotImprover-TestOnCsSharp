@@ -21,9 +21,9 @@ public enum DispositionType
 
 public enum PriorityType
 {
-	PRIORITY_LOW, 
-    PRIORITY_MEDIUM, 
-    PRIORITY_HIGH, 
+    PRIORITY_LOW,
+    PRIORITY_MEDIUM,
+    PRIORITY_HIGH,
     PRIORITY_UNINTERRUPTABLE
 };
 
@@ -38,8 +38,18 @@ public class BotImprover : BasePlugin
     public override string ModuleDescription => "BotImprover plugin";
 
     //client, desc, pos, pri, dur, clearIfClose, angleTolerance, attack
-    private MemoryFunctionWithReturn<nint, string, Vector, PriorityType, float, bool, float, bool> CCSBot_SetLookAtFunc =
+    private MemoryFunctionVoid<nint, string, Vector, PriorityType, float, bool, float, bool> CCSBot_SetLookAtFunc =
         new("55 48 89 E5 41 57 49 89 FF 41 56 45 89 C6 41 55 41 54 49 89 F4", Addresses.ServerPath);
+
+    private MemoryFunctionVoid<nint> CCSBot_PickNewAimSpotFunc =
+        new("55 48 89 E5 41 57 41 56 41 55 41 54 53 48 83 EC 58 80 3D E8 38 1F 01 00", Addresses.ServerPath);
+
+    //In CCSBot::Upkeep code bottom
+    private MemoryFunctionWithReturn<float> BotCOSFunc =
+        new("55 48 89 E5 53 48 89 FB 48 83 EC 08 80 7F 3D 00", Addresses.ServerPath);
+    //In CCSBot::Upkeep code bottom
+    private MemoryFunctionWithReturn<float> BotSINFunc =
+        new("F3 0F 5C 05 D4 9E C1 00", Addresses.ServerPath);
 
     //private MemoryFunctionVoid CCSBot_UpKeepFuncVoid =
     //    new("55 48 89 E5 41 57 41 56 41 55 41 54 49 89 FC 53 48 83 EC 38 4C 8B 2D 7D D9 FA 00", Addresses.ServerPath);
@@ -51,6 +61,9 @@ public class BotImprover : BasePlugin
         try
         {
             CCSBot_SetLookAtFunc.Hook(Hook_CCSBot_SetLookAt, HookMode.Pre);
+            BotCOSFunc.Hook(Hook_BotCOS, HookMode.Pre);
+            BotSINFunc.Hook(Hook_BotSIN, HookMode.Pre);
+            CCSBot_PickNewAimSpotFunc.Hook(Hook_CCSBot_PickNewAimSpot, HookMode.Post);
             //CCSBot_UpKeepFuncVoid.Hook(Hook_CCSBot_UpKeepVoid, HookMode.Pre);
         }
         catch (Exception ex)
@@ -60,31 +73,80 @@ public class BotImprover : BasePlugin
                 Logger.LogInformation("[BotImprover] HookFailed: " + ex.Message);
             }
         }
+
+        RegisterListener<Listeners.OnTick>(OnTick);
+        Logger.LogInformation("HIME OnTick Listening!");
+
         Logger.LogInformation("HIME BotImprover Load Finish!");
         Logger.LogInformation("======================================");
     }
-    /*
-        private HookResult Hook_CCSBot_UpKeepVoid(DynamicHook hook)
+
+    public void OnTick()
+    {
+        try
         {
-
-            try
-            {
-                //Console.WriteLine("===============================================");
-                //Console.WriteLine("CCSBot_UpKeep was fired!");
-                //Console.WriteLine("===============================================");
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message != "Invalid game event")
-                {
-                    Console.WriteLine("[BotImprover] Hook Failed: " + ex.Message);
-                    Logger.LogInformation("[BotImprover] Hook Failed: " + ex.Message);
-                }
-            }
-
-            return HookResult.Continue;
         }
-    */
+        catch (Exception ex)
+        {
+            if (ex.Message != "Invalid game event")
+            {
+                Logger.LogInformation("[BotImprover] OnTick Failed: " + ex.Message);
+            }
+        }
+    }
+
+    private HookResult Hook_CCSBot_PickNewAimSpot(DynamicHook hook)
+    {
+        try
+        {
+            CCSBot bot = new CCSBot(hook.GetParam<nint>(0));
+            Schema.SetSchemaValue(bot.Handle, "CCSBot", "m_targetSpot", new Vector(120, 120, 120));
+            return HookResult.Handled;
+        }
+        catch (Exception ex)
+        {
+            if (ex.Message != "Invalid game event")
+            {
+                Logger.LogInformation("[BotImprover] Hook_BotSIN Failed: " + ex.Message);
+            }
+        }
+        return HookResult.Continue;
+    }
+
+    private HookResult Hook_BotCOS(DynamicHook hook)
+    {
+        try
+        {
+            hook.SetReturn<float>(0f);
+            return HookResult.Changed;
+        }
+        catch (Exception ex)
+        {
+            if (ex.Message != "Invalid game event")
+            {
+                Logger.LogInformation("[BotImprover] Hook_BotCOS Failed: " + ex.Message);
+            }
+        }
+        return HookResult.Continue;
+    }
+
+    private HookResult Hook_BotSIN(DynamicHook hook)
+    {
+        try
+        {
+            hook.SetReturn<float>(0f);
+            return HookResult.Changed;
+        }
+        catch (Exception ex)
+        {
+            if (ex.Message != "Invalid game event")
+            {
+                Logger.LogInformation("[BotImprover] Hook_BotSIN Failed: " + ex.Message);
+            }
+        }
+        return HookResult.Continue;
+    }
+
     private HookResult Hook_CCSBot_SetLookAt(DynamicHook hook)
     {
         try
@@ -92,7 +154,7 @@ public class BotImprover : BasePlugin
             CCSBot bot = new CCSBot(hook.GetParam<nint>(0));
             //CCSPlayerController player = bot.Controller;
             string Desc = hook.GetParam<string>(1);
-            Logger.LogInformation("[BotImprover] "+ bot.Name +" SetLookAt: " + hook.GetParam<string>(1));
+            //Logger.LogInformation("[BotImprover] "+ bot.Name +" SetLookAt: " + hook.GetParam<string>(1));
             if (Desc.Equals("Defuse bomb", StringComparison.OrdinalIgnoreCase))
             {
                 return HookResult.Continue;
@@ -124,11 +186,11 @@ public class BotImprover : BasePlugin
             }
             else if (Desc.Equals("Blind", StringComparison.OrdinalIgnoreCase))
             {
-                return HookResult.Stop;
+                return HookResult.Handled;
             }
             else if (Desc.Equals("Face outward", StringComparison.OrdinalIgnoreCase))
             {
-                return HookResult.Stop;
+                return HookResult.Handled;
             }
             else if (Desc.Equals("Breakable", StringComparison.OrdinalIgnoreCase))
             {
@@ -210,4 +272,24 @@ public class BotImprover : BasePlugin
             return false;
         }
     }
+
+    public void CCSBot_Attack(CCSBot bot, CCSPlayerController player)
+    {
+        try
+        {
+            var CCSBot_BendLineOfSightFunc = VirtualFunction.CreateVoid<nint, nint>(
+                "48 85 F6 0F 84 ? ? ? ? 55 48 89 E5 41 55 49 89 F5", Addresses.ServerPath
+            );
+            CCSBot_BendLineOfSightFunc(bot.Handle, player.Handle);
+        }
+        catch (Exception ex)
+        {
+            if (ex.Message != "Invalid game event")
+            {
+                Logger.LogInformation("[BotImprover] Attack Failed: " + ex.Message);
+            }
+        }
+    }
+
+
 }
