@@ -301,7 +301,7 @@ public class BotImprover : BasePlugin
     {
         try
         {
-            var LookupBoneFunc = VirtualFunction.CreateVoid<nint, string, int>(
+            var LookupBoneFunc = VirtualFunction.Create<nint, string, int>(
                 "55 48 89 E5 41 57 41 56 41 55 41 54 53 48 BB 00 00 C0 7F 00 00 C0 7F", Addresses.ServerPath
             );
             return LookupBoneFunc(player.Handle, BoneName);
