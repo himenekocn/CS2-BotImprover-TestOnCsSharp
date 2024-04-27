@@ -58,7 +58,7 @@ public class BotImprover : BasePlugin
     {
         Logger.LogInformation("======================================");
         Logger.LogInformation("HIME BotImprover Load Start!");
-        
+
         try
         {
             Logger.LogInformation("HIME BotImprover StartHook SetLookAt!");
@@ -181,8 +181,10 @@ public class BotImprover : BasePlugin
             {
                 Vector fNadePos = hook.GetParam<Vector>(2);
                 Logger.LogInformation("[BotImprover] Avoid Flashbang: " + fNadePos.X + " " + fNadePos.Y + " " + fNadePos.Z);
-                Vector nNadePos;
-                CCSBot_BendLineOfSight(bot, bot.EyePosition, fNadePos, ref nNadePos, 140.0f);
+                Vector nNadePos = new Vector(0, 0, 0);
+                bool finish = CCSBot_BendLineOfSight(bot, bot.EyePosition, fNadePos, ref nNadePos, 140.0f);
+                if (finish)
+                    Logger.LogInformation("[BotImprover] GrenadeThrow Bend finish");
                 Logger.LogInformation("[BotImprover] Avoid Flashbang Bend: " + nNadePos.X + " " + nNadePos.Y + " " + nNadePos.Z);
                 hook.SetParam<Vector>(2, nNadePos);
                 hook.SetParam<float>(4, 2.0f);
@@ -211,8 +213,10 @@ public class BotImprover : BasePlugin
             {
                 Vector fNadePos = hook.GetParam<Vector>(2);
                 Logger.LogInformation("[BotImprover] GrenadeThrow: " + fNadePos.X + " " + fNadePos.Y + " " + fNadePos.Z);
-                Vector nNadePos;
-                CCSBot_BendLineOfSight(bot, bot.EyePosition, fNadePos, ref nNadePos, 135.0f);
+                Vector nNadePos = new Vector(0, 0, 0);
+                bool finish = CCSBot_BendLineOfSight(bot, bot.EyePosition, fNadePos, ref nNadePos, 135.0f);
+                if (finish)
+                    Logger.LogInformation("[BotImprover] GrenadeThrow Bend finish");
                 Logger.LogInformation("[BotImprover] GrenadeThrow Bend: " + nNadePos.X + " " + nNadePos.Y + " " + nNadePos.Z);
                 hook.SetParam<Vector>(2, nNadePos);
                 hook.SetParam<float>(4, 3.0f);
