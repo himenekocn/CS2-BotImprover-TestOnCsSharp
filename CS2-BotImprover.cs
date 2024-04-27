@@ -9,6 +9,16 @@ using Vector = CounterStrikeSharp.API.Modules.Utils.Vector;
 using Microsoft.Extensions.Logging;
 
 namespace BotImprover;
+
+public enum DispositionType
+{
+    ENGAGE_AND_INVESTIGATE, // engage enemies on sight and investigate enemy noises
+    OPPORTUNITY_FIRE,       // engage enemies on sight, but only look towards enemy noises, dont investigate
+    SELF_DEFENSE,           // only engage if fired on, or very close to enemy
+    IGNORE_ENEMIES,         // ignore all enemies - useful for ducking around corners, running away, etc
+    NUM_DISPOSITIONS
+};
+
 public class BotImprover : BasePlugin
 {
     public override string ModuleName => "CS2 BotImprover Plugin";
@@ -19,7 +29,7 @@ public class BotImprover : BasePlugin
 
     public override string ModuleDescription => "BotImprover plugin";
 
-    private MemoryFunctionWithReturn<nint, string, Vector, int, float, bool, float, bool> CCSBot_SetLookAtFunc =
+    private MemoryFunctionWithReturn<nint, string, Vector, DispositionType, float, bool, float, bool> CCSBot_SetLookAtFunc =
         new("55 48 89 E5 41 57 49 89 FF 41 56 45 89 C6 41 55 41 54 49 89 F4", Addresses.ServerPath);
 
     //private MemoryFunctionVoid CCSBot_UpKeepFuncVoid =
@@ -71,10 +81,8 @@ public class BotImprover : BasePlugin
     {
         try
         {
-            Console.WriteLine("[BotImprover] SetLookAt: " + hook.GetReturn<string>(1));
-            Logger.LogInformation("[BotImprover] SetLookAt: " + hook.GetReturn<string>(1));
-            //hook.SetReturn<float>(0.0f);
-            //return HookResult.Continue;
+            Console.WriteLine("[BotImprover] SetLookAt: " + hook.GetParam<string>(1));
+            Logger.LogInformation("[BotImprover] SetLookAt: " + hook.GetParam<string>(1));
         }
         catch (Exception ex)
         {
