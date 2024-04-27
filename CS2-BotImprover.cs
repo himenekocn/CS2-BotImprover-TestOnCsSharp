@@ -45,33 +45,34 @@ public class BotImprover : BasePlugin
         Console.WriteLine("HIME BotImprover Load Finish!");
         Console.WriteLine("======================================");
     }
-/*
-    private HookResult Hook_CCSBot_UpKeepVoid(DynamicHook hook)
-    {
-        
-        try
+    /*
+        private HookResult Hook_CCSBot_UpKeepVoid(DynamicHook hook)
         {
-            //Console.WriteLine("===============================================");
-            //Console.WriteLine("CCSBot_UpKeep was fired!");
-            //Console.WriteLine("===============================================");
-        }
-        catch (Exception ex)
-        {
-            if (ex.Message != "Invalid game event")
+
+            try
             {
-                Console.WriteLine("[BotImprover] Hook Failed: " + ex.Message);
-                Logger.LogInformation("[BotImprover] Hook Failed: " + ex.Message);
+                //Console.WriteLine("===============================================");
+                //Console.WriteLine("CCSBot_UpKeep was fired!");
+                //Console.WriteLine("===============================================");
             }
+            catch (Exception ex)
+            {
+                if (ex.Message != "Invalid game event")
+                {
+                    Console.WriteLine("[BotImprover] Hook Failed: " + ex.Message);
+                    Logger.LogInformation("[BotImprover] Hook Failed: " + ex.Message);
+                }
+            }
+
+            return HookResult.Continue;
         }
-        
-        return HookResult.Continue;
-    }
-*/
+    */
     private HookResult Hook_CCSBot_SetLookAt(DynamicHook hook)
     {
         try
         {
             Console.WriteLine("[BotImprover] SetLookAt: " + hook.GetReturn<string>(1));
+            Logger.LogInformation("[BotImprover] SetLookAt: " + hook.GetReturn<string>(1));
             //hook.SetReturn<float>(0.0f);
             //return HookResult.Continue;
         }
