@@ -45,10 +45,10 @@ public class BotImprover : BasePlugin
         new("55 48 89 E5 41 57 41 56 41 55 41 54 53 48 83 EC 58 80 3D E8 38 1F 01 00", Addresses.ServerPath);
 
     //In CCSBot::Upkeep code bottom
-    private MemoryFunctionWithReturn<float> BotCOSFunc =
-        new("55 48 89 E5 53 48 89 FB 48 83 EC 08 80 7F 3D 00", Addresses.ServerPath);
+    private MemoryFunctionWithReturn<float, float> BotCOSFunc =
+        new("F3 0F 10 0D 04 25 C1 00", Addresses.ServerPath);
     //In CCSBot::Upkeep code bottom
-    private MemoryFunctionWithReturn<float> BotSINFunc =
+    private MemoryFunctionWithReturn<float, float> BotSINFunc =
         new("F3 0F 5C 05 D4 9E C1 00", Addresses.ServerPath);
 
     //private MemoryFunctionVoid CCSBot_UpKeepFuncVoid =
@@ -112,7 +112,7 @@ public class BotImprover : BasePlugin
         {
             if (ex.Message != "Invalid game event")
             {
-                Logger.LogInformation("[BotImprover] Hook_BotSIN Failed: " + ex.Message);
+                Logger.LogInformation("[BotImprover] CCSBot_PickNewAimSpot Failed: " + ex.Message);
             }
         }
         return HookResult.Continue;
@@ -129,7 +129,7 @@ public class BotImprover : BasePlugin
         {
             if (ex.Message != "Invalid game event")
             {
-                Logger.LogInformation("[BotImprover] Hook_BotCOS Failed: " + ex.Message);
+                Logger.LogInformation("[BotImprover] BotCOS Failed: " + ex.Message);
             }
         }
         return HookResult.Continue;
@@ -146,7 +146,7 @@ public class BotImprover : BasePlugin
         {
             if (ex.Message != "Invalid game event")
             {
-                Logger.LogInformation("[BotImprover] Hook_BotSIN Failed: " + ex.Message);
+                Logger.LogInformation("[BotImprover] BotSIN Failed: " + ex.Message);
             }
         }
         return HookResult.Continue;
