@@ -46,7 +46,7 @@ public class BotImprover : BasePlugin
 
     //In CCSBot::Upkeep code bottom
     private MemoryFunctionWithReturn<float, float> BotCOSFunc =
-        new("F3 0F 10 0D 04 25 C1 00", Addresses.ServerPath);
+        new("F3 0F 5C 05 ? ? ? ? F3 0F 10 0D ? ? ? ?", Addresses.ServerPath);
     //In CCSBot::Upkeep code bottom
     private MemoryFunctionWithReturn<float, float> BotSINFunc =
         new("F3 0F 5C 05 D4 9E C1 00", Addresses.ServerPath);
@@ -65,8 +65,8 @@ public class BotImprover : BasePlugin
             CCSBot_SetLookAtFunc.Hook(Hook_CCSBot_SetLookAt, HookMode.Pre);
             Logger.LogInformation("HIME BotImprover StartHook BotCOS!");
             BotCOSFunc.Hook(Hook_BotCOS, HookMode.Pre);
-            Logger.LogInformation("HIME BotImprover StartHook BotSIN!");
-            BotSINFunc.Hook(Hook_BotSIN, HookMode.Pre);
+            //Logger.LogInformation("HIME BotImprover StartHook BotSIN!");
+            //BotSINFunc.Hook(Hook_BotSIN, HookMode.Pre);
             Logger.LogInformation("HIME BotImprover StartHook PickNewAimSpot!");
             CCSBot_PickNewAimSpotFunc.Hook(Hook_CCSBot_PickNewAimSpot, HookMode.Post);
             //CCSBot_UpKeepFuncVoid.Hook(Hook_CCSBot_UpKeepVoid, HookMode.Pre);
