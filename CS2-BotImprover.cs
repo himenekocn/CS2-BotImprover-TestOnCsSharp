@@ -81,7 +81,7 @@ public class BotImprover : BasePlugin
     {
         try
         {
-            CCSPlayerController player = hook.GetParam<nint>(0);
+            CCSPlayerController player = hook.GetParam<CCSPlayerController>(0);
             string Desc = hook.GetParam<string>(1);
             Logger.LogInformation("[BotImprover] SetLookAt: " + hook.GetParam<string>(1));
             if (Desc.Equals("Defuse bomb", StringComparison.OrdinalIgnoreCase))
