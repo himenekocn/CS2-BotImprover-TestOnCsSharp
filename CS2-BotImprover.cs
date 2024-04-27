@@ -180,7 +180,7 @@ public class BotImprover : BasePlugin
             {
                 Vector fNadePos = hook.GetParam<Vector>(2);
                 Logger.LogInformation("[BotImprover] Avoid Flashbang: " + fNadePos.X + " " + fNadePos.Y + " " + fNadePos.Z);
-                CCSBot_BendLineOfSight(bot, bot.EyePosition, fNadePos, fNadePos, 140.0f);
+                CCSBot_BendLineOfSight(bot, bot.EyePosition, fNadePos, ref fNadePos, 140.0f);
                 Logger.LogInformation("[BotImprover] Avoid Flashbang Bend: " + fNadePos.X + " " + fNadePos.Y + " " + fNadePos.Z);
                 hook.SetParam<Vector>(2, fNadePos);
                 hook.SetParam<float>(4, 2.0f);
@@ -209,7 +209,7 @@ public class BotImprover : BasePlugin
             {
                 Vector fNadePos = hook.GetParam<Vector>(2);
                 Logger.LogInformation("[BotImprover] GrenadeThrow: " + fNadePos.X + " " + fNadePos.Y + " " + fNadePos.Z);
-                CCSBot_BendLineOfSight(bot, bot.EyePosition, fNadePos, fNadePos, 135.0f);
+                CCSBot_BendLineOfSight(bot, bot.EyePosition, fNadePos, ref fNadePos, 135.0f);
                 Logger.LogInformation("[BotImprover] GrenadeThrow Bend: " + fNadePos.X + " " + fNadePos.Y + " " + fNadePos.Z);
                 hook.SetParam<Vector>(2, fNadePos);
                 hook.SetParam<float>(4, 3.0f);
@@ -263,7 +263,7 @@ public class BotImprover : BasePlugin
     {
         try
         {
-            var CCSBot_BendLineOfSightFunc = VirtualFunction.Create<nint, Vector, Vector, ref Vector, float, bool>(
+            var CCSBot_BendLineOfSightFunc = VirtualFunction.Create<nint, Vector, Vector, Vector, float, bool>(
                 "55 48 89 E5 41 57 49 89 D7 41 56 41 55 41 54 49 89 FC 53 48 89 F3 48 81 EC D8 01 00 00", Addresses.ServerPath
             );
 
