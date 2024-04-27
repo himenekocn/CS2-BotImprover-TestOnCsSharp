@@ -58,11 +58,16 @@ public class BotImprover : BasePlugin
     {
         Logger.LogInformation("======================================");
         Logger.LogInformation("HIME BotImprover Load Start!");
+        
         try
         {
+            Logger.LogInformation("HIME BotImprover StartHook SetLookAt!");
             CCSBot_SetLookAtFunc.Hook(Hook_CCSBot_SetLookAt, HookMode.Pre);
+            Logger.LogInformation("HIME BotImprover StartHook BotCOS!");
             BotCOSFunc.Hook(Hook_BotCOS, HookMode.Pre);
+            Logger.LogInformation("HIME BotImprover StartHook BotSIN!");
             BotSINFunc.Hook(Hook_BotSIN, HookMode.Pre);
+            Logger.LogInformation("HIME BotImprover StartHook PickNewAimSpot!");
             CCSBot_PickNewAimSpotFunc.Hook(Hook_CCSBot_PickNewAimSpot, HookMode.Post);
             //CCSBot_UpKeepFuncVoid.Hook(Hook_CCSBot_UpKeepVoid, HookMode.Pre);
         }
@@ -75,7 +80,7 @@ public class BotImprover : BasePlugin
         }
 
         RegisterListener<Listeners.OnTick>(OnTick);
-        Logger.LogInformation("HIME OnTick Listening!");
+        Logger.LogInformation("HIME BotImprover OnTick Listening!");
 
         Logger.LogInformation("HIME BotImprover Load Finish!");
         Logger.LogInformation("======================================");
