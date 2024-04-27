@@ -81,7 +81,7 @@ public class BotImprover : BasePlugin
     {
         try
         {
-            CCSPlayerController player = hook.GetParam<nint>(0);
+            CCSPlayerController player = CBasePlayerController(hook.GetParam<nint>(0));
             string Desc = hook.GetParam<string>(1);
             Logger.LogInformation("[BotImprover] SetLookAt: " + hook.GetParam<string>(1));
             if (Desc.Equals("Defuse bomb", StringComparison.OrdinalIgnoreCase))
@@ -180,7 +180,7 @@ public class BotImprover : BasePlugin
         return HookResult.Continue;
     }
 
-    public static bool CCSBot_BendLineOfSight(CCSPlayerController player, Vector Eye, Vector Point, Vector Bend, float AngleLimit)
+    public bool CCSBot_BendLineOfSight(CCSPlayerController player, Vector Eye, Vector Point, Vector Bend, float AngleLimit)
     {
         try
         {
