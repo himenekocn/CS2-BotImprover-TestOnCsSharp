@@ -131,7 +131,7 @@ public class BotImprover : BasePlugin
         try
         {
             CCSBot bot = new CCSBot(hook.GetParam<nint>(0));
-            CCSPlayerPawn getplayerpawn = bot.Enemy;
+            CCSPlayerPawn getplayerpawn = bot.Enemy.Value;
             if(getplayerpawn.IsValid)
             {
                 CCSPlayerController getplayer = getplayerpawn.Controller.Value;
