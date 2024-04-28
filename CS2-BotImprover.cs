@@ -42,7 +42,7 @@ public class BotImprover : BasePlugin
         new("55 48 89 E5 41 57 49 89 FF 41 56 45 89 C6 41 55 41 54 49 89 F4", Addresses.ServerPath);
 
     private MemoryFunctionVoid<nint> CCSBot_PickNewAimSpotFunc =
-        new("55 48 89 E5 41 57 41 56 41 55 41 54 53 48 83 EC 58 80 3D E8 38 1F 01 00", Addresses.ServerPath);
+        new("48 8D 35 ? ? ? ? 0F 11 4D ? 48 8D 3D ? ? ? ? 0F 11 4D ? 0F 11 4D ? 0F 11 4D ? E8 ? ? ? ? 48 8D 15 ? ? ? ? 48 8D 35 ? ? ? ? 48 8D 3D ? ? ? ? E8 ? ? ? ? 49 89 D8 41 BA ? ? ? ? BA ? ? ? ? 48 8D 0D ? ? ? ? 66 0F EF C9 66 0F EF C0 0F 11 4D ? 48 8D 35 ? ? ? ? 0F 11 4D ? 48 8D 3D ? ? ? ? 0F 11 4D ? 0F 11 4D ? 48 C7 45 ? ? ? ? ? 66 44 89 55 ? E8 ? ? ? ? 48 8D 15 ? ? ? ? 48 8D 35 ? ? ? ? 48 8D 3D ? ? ? ? E8 ? ? ? ? 49 89 D8", Addresses.ServerPath);
 
     //In CCSBot::Upkeep code bottom
     private MemoryFunctionWithReturn<float, float> BotCOSFunc =
@@ -68,7 +68,7 @@ public class BotImprover : BasePlugin
             //Logger.LogInformation("HIME BotImprover StartHook BotSIN!");
             //BotSINFunc.Hook(Hook_BotSIN, HookMode.Pre);
             Logger.LogInformation("HIME BotImprover StartHook PickNewAimSpot!");
-            CCSBot_PickNewAimSpotFunc.Hook(Hook_CCSBot_PickNewAimSpot, HookMode.Pre);
+            CCSBot_PickNewAimSpotFunc.Hook(Hook_CCSBot_PickNewAimSpot, HookMode.Post);
             //CCSBot_UpKeepFuncVoid.Hook(Hook_CCSBot_UpKeepVoid, HookMode.Pre);
         }
         catch (Exception ex)
@@ -102,6 +102,7 @@ public class BotImprover : BasePlugin
 
     private HookResult Hook_CCSBot_PickNewAimSpot(DynamicHook hook)
     {
+        Logger.LogInformation("[BotImprover] CCSBot_PickNewAimSpot run ");
         try
         {
             CCSBot bot = new CCSBot(hook.GetParam<nint>(0));
@@ -182,11 +183,16 @@ public class BotImprover : BasePlugin
                 Vector fNadePos = hook.GetParam<Vector>(2);
                 Logger.LogInformation("[BotImprover] Avoid Flashbang: " + fNadePos.X + " " + fNadePos.Y + " " + fNadePos.Z);
                 Vector nNadePos = new Vector(0, 0, 0);
-                bool finish = CCSBot_BendLineOfSight(bot, bot.EyePosition, fNadePos, nNadePos, 140.0f);
-                if (finish)
-                    Logger.LogInformation("[BotImprover] GrenadeThrow Bend finish");
+                CCSBot_BendLineOfSight(bot, bot.EyePosition, fNadePos, nNadePos, 140.0f);
                 Logger.LogInformation("[BotImprover] Avoid Flashbang Bend: " + nNadePos.X + " " + nNadePos.Y + " " + nNadePos.Z);
-                hook.SetParam<Vector>(2, nNadePos);
+                if (nNadePos.IsZero())
+                {
+                    hook.SetParam<Vector>(2, fNadePos);
+                }
+                else
+                {
+                    hook.SetParam<Vector>(2, nNadePos);
+                }
                 hook.SetParam<float>(4, 2.0f);
                 hook.SetParam<float>(5, 1);
                 hook.SetParam<float>(6, 1.2f);
@@ -214,10 +220,16 @@ public class BotImprover : BasePlugin
                 Vector fNadePos = hook.GetParam<Vector>(2);
                 Logger.LogInformation("[BotImprover] GrenadeThrow: " + fNadePos.X + " " + fNadePos.Y + " " + fNadePos.Z);
                 Vector nNadePos = new Vector(0, 0, 0);
-                bool finish = CCSBot_BendLineOfSight(bot, bot.EyePosition, fNadePos, nNadePos, 135.0f);
-                if (finish)
-                    Logger.LogInformation("[BotImprover] GrenadeThrow Bend finish");
+                CCSBot_BendLineOfSight(bot, bot.EyePosition, fNadePos, nNadePos, 135.0f);
                 Logger.LogInformation("[BotImprover] GrenadeThrow Bend: " + nNadePos.X + " " + nNadePos.Y + " " + nNadePos.Z);
+                if (nNadePos.IsZero())
+                {
+                    hook.SetParam<Vector>(2, fNadePos);
+                }
+                else
+                {
+                    hook.SetParam<Vector>(2, nNadePos);
+                }
                 hook.SetParam<Vector>(2, nNadePos);
                 hook.SetParam<float>(4, 3.0f);
                 hook.SetParam<float>(6, 1.5f);
