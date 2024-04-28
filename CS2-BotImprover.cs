@@ -182,7 +182,7 @@ public class BotImprover : BasePlugin
                 Vector fNadePos = hook.GetParam<Vector>(2);
                 Logger.LogInformation("[BotImprover] Avoid Flashbang: " + fNadePos.X + " " + fNadePos.Y + " " + fNadePos.Z);
                 Vector nNadePos = new Vector(0, 0, 0);
-                bool finish = CCSBot_BendLineOfSight(bot, bot.EyePosition, fNadePos, ref nNadePos, 140.0f);
+                bool finish = CCSBot_BendLineOfSight(bot, bot.EyePosition, fNadePos, nNadePos, 140.0f);
                 if (finish)
                     Logger.LogInformation("[BotImprover] GrenadeThrow Bend finish");
                 Logger.LogInformation("[BotImprover] Avoid Flashbang Bend: " + nNadePos.X + " " + nNadePos.Y + " " + nNadePos.Z);
