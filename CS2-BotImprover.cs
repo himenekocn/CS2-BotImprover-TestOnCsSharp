@@ -144,7 +144,12 @@ public class BotImprover : BasePlugin
                         Logger.LogInformation("[BotImprover] CCSBot_UpKeep player GetNewAim");
                         Vector NewSpot = CCSBot_GetPartPosition_Get(bot, getplayer, VisiblePartType.HEAD);
                         Logger.LogInformation("[BotImprover] CCSBot_UpKeep player GetNewAimPos: " + NewSpot.X + " " + NewSpot.Y + " " + NewSpot.Z);
-                        Schema.SetSchemaValue(bot.Handle, "CCSBot", "m_targetSpot", NewSpot);
+                        Schema.SetSchemaValue<Vector>(bot.Handle, "CCSBot", "m_targetSpot", NewSpot);
+
+                        Logger.LogInformation("[BotImprover] CCSBot_UpKeep bot spot: " + bot.LookAtSpot.X + " " + bot.LookAtSpot.Y + " " + bot.LookAtSpot.Z);
+
+                        Vector sdSpot = Schema.GetSchemaValue<Vector>(bot.Handle, "CCSBot", "m_targetSpot");
+                        Logger.LogInformation("[BotImprover] CCSBot_UpKeep bot sdSpot: " + sdSpot.X + " " + sdSpot.Y + " " + sdSpot.Z);
                         return HookResult.Handled;
                     }
                 }
