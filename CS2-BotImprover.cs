@@ -56,14 +56,12 @@ public class BotImprover : BasePlugin
     //new("55 48 89 E5 41 57 41 56 41 55 41 54 53 48 83 EC 58 80 3D E8 38 1F 01 00", Addresses.ServerPath);
 
     //In CCSBot::Upkeep code bottom
-    private MemoryFunctionWithReturn<float, float> BotCOSFunc =
-        new("F3 0F 10 0D ? ? ? ? F3 0F 10 15 ? ? ? ? F3 0F 59 C8 F3 0F 58 0D ? ? ? ? 66 0F 3A 0A C9 ? F3 0F 59 CA F3 0F 5C C1 66 0F EF C9 0F 2F C8 76 ? F3 0F 58 C2 F3 0F 59 05 ? ? ? ? 48 8D 15 ? ? ? ? F3 0F 5E C2 F3 0F 2C C0 48 98 F3 0F 10 04 82 C3 66 2E 0F 1F 84 00", Addresses.ServerPath);
+    //private MemoryFunctionWithReturn<float, float> BotCOSFunc = new("F3 0F 10 0D ? ? ? ? F3 0F 10 15 ? ? ? ? F3 0F 59 C8 F3 0F 58 0D ? ? ? ? 66 0F 3A 0A C9 ? F3 0F 59 CA F3 0F 5C C1 66 0F EF C9 0F 2F C8 76 ? F3 0F 58 C2 F3 0F 59 05 ? ? ? ? 48 8D 15 ? ? ? ? F3 0F 5E C2 F3 0F 2C C0 48 98 F3 0F 10 04 82 C3 66 2E 0F 1F 84 00", Addresses.ServerPath);
     //In CCSBot::Upkeep code bottom
-    private MemoryFunctionWithReturn<float, float> BotSINFunc =
-        new("F3 0F 5C 05 D4 9E C1 00", Addresses.ServerPath);
+    //private MemoryFunctionWithReturn<float, float> BotSINFunc = new("F3 0F 5C 05 D4 9E C1 00", Addresses.ServerPath);
 
-    //private MemoryFunctionVoid CCSBot_UpKeepFuncVoid =
-    //    new("55 48 89 E5 41 57 41 56 41 55 41 54 49 89 FC 53 48 83 EC 38 4C 8B 2D 7D D9 FA 00", Addresses.ServerPath);
+    private MemoryFunctionVoid<nint> CCSBot_UpKeepFuncVoid =
+        new("55 48 89 E5 41 57 41 56 41 55 41 54 49 89 FC 53 48 83 EC 38 4C 8B 2D 7D D9 FA 00", Addresses.ServerPath);
 
     private MemoryFunctionWithReturn<nint, nint, VisiblePartType, Vector> CCSBot_GetPartPositionFunc =
         new("55 48 89 E5 41 57 41 56 41 55 41 54 49 89 F4 53 89 D3", Addresses.ServerPath);
@@ -88,7 +86,7 @@ public class BotImprover : BasePlugin
             CCSBot_PickNewAimSpotFunc.Hook(Hook_CCSBot_PickNewAimSpot, HookMode.Post);
 
             Logger.LogInformation("HIME BotImprover StartHook GetPartPosition!");
-            CCSBot_GetPartPositionFunc.Hook(Hook_CCSBot_GetPartPosition, HookMode.Pre);
+            CCSBot_GetPartPositionFunc.Hook(Hook_CCSBot_GetPartPosition, HookMode.Post);
 
             //CCSBot_UpKeepFuncVoid.Hook(Hook_CCSBot_UpKeepVoid, HookMode.Pre);
         }
@@ -113,9 +111,9 @@ public class BotImprover : BasePlugin
         {
             foreach (var bot in Utilities.GetPlayers().Where(bot => bot is { IsValid: true, IsBot: true, PawnIsAlive: true, IsHLTV: false }))
             {
-                CCSBot getbot = bot.PlayerPawn.Value!.Bot;
-                Schema.SetSchemaValue(getbot.Handle, "CCSBot", "m_targetSpot", new Vector(10f, 10f, 10f));
-                Logger.LogInformation("[BotImprover] OnTick Spot: " + getbot.LookAtSpot.X + " " + getbot.LookAtSpot.Y + " " + getbot.LookAtSpot.Z);
+                //CCSBot getbot = bot.PlayerPawn.Value!.Bot;
+                //Schema.SetSchemaValue(getbot.Handle, "CCSBot", "m_targetSpot", new Vector(10f, 10f, 10f));
+                //Logger.LogInformation("[BotImprover] OnTick Spot: " + getbot.LookAtSpot.X + " " + getbot.LookAtSpot.Y + " " + getbot.LookAtSpot.Z);
             }
         }
         catch (Exception ex)
@@ -131,6 +129,10 @@ public class BotImprover : BasePlugin
     {
         try
         {
+            hook.SetParam<VisiblePartType>(3, VisiblePartType.HEAD);
+            Logger.LogInformation("[BotImprover] GetPartPosition Set Head");
+            return HookResult.Changed;
+            /*
             CCSBot bot = new CCSBot(hook.GetParam<nint>(0));
             CCSPlayerController player = new CCSPlayerController(hook.GetParam<nint>(1));
             Logger.LogInformation("[BotImprover] GetPartPosition Bot Get" + player.PlayerName);
@@ -140,7 +142,7 @@ public class BotImprover : BasePlugin
                 Logger.LogInformation("[BotImprover] GetPartPosition Set Head");
                 return HookResult.Changed;
             }
-            return HookResult.Continue;
+            return HookResult.Continue;*/
         }
         catch (Exception ex)
         {
