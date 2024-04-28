@@ -451,7 +451,7 @@ public class BotImprover : BasePlugin
         try
         {
             var CCSBot_GetPartPosition_GetFunc = VirtualFunction.Create<nint, nint, VisiblePartType, Vector>(
-                "55 48 89 E5 41 55 41 54 53 48 89 FB 48 83 EC 48 8B 8F D8 70 00 00", Addresses.ServerPath
+                "55 48 89 E5 41 57 41 56 41 55 41 54 49 89 F4 53 89 D3", Addresses.ServerPath
             );
 
             return CCSBot_GetPartPosition_GetFunc(bot.Handle, player.Handle, part);
