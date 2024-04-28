@@ -61,7 +61,7 @@ public class BotImprover : BasePlugin
     //private MemoryFunctionWithReturn<float, float> BotSINFunc = new("F3 0F 5C 05 D4 9E C1 00", Addresses.ServerPath);
 
     private MemoryFunctionVoid<nint> CCSBot_UpKeepFuncVoid =
-        new("55 48 89 E5 41 57 41 56 41 55 41 54 49 89 FC 53 48 83 EC 38 4C 8B 2D 7D D9 FA 00", Addresses.ServerPath);
+        new("55 48 89 E5 41 57 41 56 41 55 41 54 49 89 FC 53 48 83 EC 38 4C 8B 2D DD D9 FA 00", Addresses.ServerPath);
 
     private MemoryFunctionWithReturn<nint, nint, VisiblePartType, Vector> CCSBot_GetPartPositionFunc =
         new("55 48 89 E5 41 57 41 56 41 55 41 54 49 89 F4 53 89 D3", Addresses.ServerPath);
@@ -88,7 +88,7 @@ public class BotImprover : BasePlugin
             //Logger.LogInformation("HIME BotImprover StartHook GetPartPosition!");
             //CCSBot_GetPartPositionFunc.Hook(Hook_CCSBot_GetPartPosition, HookMode.Post);
 
-            Logger.LogInformation("HIME BotImprover UpKeep GetPartPosition!");
+            Logger.LogInformation("HIME BotImprover UpKeep!");
             CCSBot_UpKeepFuncVoid.Hook(Hook_CCSBot_UpKeepVoid, HookMode.Pre);
         }
         catch (Exception ex)
