@@ -134,7 +134,7 @@ public class BotImprover : BasePlugin
             CCSPlayerPawn getplayerpawn = bot.Enemy.Value;
             if(getplayerpawn.IsValid)
             {
-                CCSPlayerController getplayer = getplayerpawn.Controller;
+                CCSPlayerController getplayerCbase = getplayerpawn.OriginalController.Value;
                 Logger.LogInformation("[BotImprover] CCSBot_UpKeep player Valid");
                 if(bot.IsEnemyVisible)
                 {
