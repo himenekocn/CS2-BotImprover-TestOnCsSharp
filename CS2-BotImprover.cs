@@ -82,13 +82,14 @@ public class BotImprover : BasePlugin
             //Logger.LogInformation("HIME BotImprover StartHook BotSIN!");
             //BotSINFunc.Hook(Hook_BotSIN, HookMode.Pre);
 
-            Logger.LogInformation("HIME BotImprover StartHook PickNewAimSpot!");
-            CCSBot_PickNewAimSpotFunc.Hook(Hook_CCSBot_PickNewAimSpot, HookMode.Post);
+            //Logger.LogInformation("HIME BotImprover StartHook PickNewAimSpot!");
+            //CCSBot_PickNewAimSpotFunc.Hook(Hook_CCSBot_PickNewAimSpot, HookMode.Post);
 
-            Logger.LogInformation("HIME BotImprover StartHook GetPartPosition!");
-            CCSBot_GetPartPositionFunc.Hook(Hook_CCSBot_GetPartPosition, HookMode.Post);
+            //Logger.LogInformation("HIME BotImprover StartHook GetPartPosition!");
+            //CCSBot_GetPartPositionFunc.Hook(Hook_CCSBot_GetPartPosition, HookMode.Post);
 
-            //CCSBot_UpKeepFuncVoid.Hook(Hook_CCSBot_UpKeepVoid, HookMode.Pre);
+            Logger.LogInformation("HIME BotImprover UpKeep GetPartPosition!");
+            CCSBot_UpKeepFuncVoid.Hook(Hook_CCSBot_UpKeepVoid, HookMode.Pre);
         }
         catch (Exception ex)
         {
@@ -125,22 +126,53 @@ public class BotImprover : BasePlugin
         }
     }
 
+    private HookResult Hook_CCSBot_UpKeepVoid(DynamicHook hook)
+    {
+        try
+        {
+            CCSBot bot = new CCSBot(hook.GetParam<nint>(0));
+            //CCSPlayerPawn getplayer = bot.Enemy;
+            CCSPlayerController getplayer = bot.Enemy.Controller.Value;
+            if(getplayer.IsValid)
+            {
+                Logger.LogInformation("[BotImprover] CCSBot_UpKeep player Valid");
+                if(bot.IsEnemyVisible)
+                {
+                    Logger.LogInformation("[BotImprover] CCSBot_UpKeep player IsEnemyVisible");
+                    if (CCSBot_IsEnemyPartVisible(bot, VisiblePartType.HEAD))
+                    {
+                        Logger.LogInformation("[BotImprover] CCSBot_UpKeep player GetNewAim");
+                        Vector NewSpot = CCSBot_GetPartPosition_Get(bot, getplayer, VisiblePartType.HEAD);
+                        Schema.SetSchemaValue(getbot.Handle, "CCSBot", "m_targetSpot", NewSpot);
+                        return HookResult.Handled;
+                    }
+                }
+            }
+            return HookResult.Continue;
+        }
+        catch (Exception ex)
+        {
+            if (ex.Message != "Invalid game event")
+            {
+                Logger.LogInformation("[BotImprover] GetPartPosition Failed: " + ex.Message);
+            }
+        }
+        return HookResult.Continue;
+    }
+
     private HookResult Hook_CCSBot_GetPartPosition(DynamicHook hook)
     {
         try
         {
-            Server.NextFrame(() =>
+            CCSBot bot = new CCSBot(hook.GetParam<nint>(0));
+            CCSPlayerController player = new CCSPlayerController(hook.GetParam<nint>(1));
+            Logger.LogInformation("[BotImprover] GetPartPosition Bot Get" + player.PlayerName);
+            if (CCSBot_IsEnemyPartVisible(bot, VisiblePartType.HEAD))
             {
-                CCSBot bot = new CCSBot(hook.GetParam<nint>(0));
-                CCSPlayerController player = new CCSPlayerController(hook.GetParam<nint>(1));
-                Logger.LogInformation("[BotImprover] GetPartPosition Bot Get" + player.PlayerName);
-                if (CCSBot_IsEnemyPartVisible(bot, VisiblePartType.HEAD))
-                {
-                    hook.SetParam<VisiblePartType>(3, VisiblePartType.HEAD);
-                    Logger.LogInformation("[BotImprover] GetPartPosition Set Head");
-                    return HookResult.Changed;
-                }
-            });
+                hook.SetParam<VisiblePartType>(3, VisiblePartType.HEAD);
+                Logger.LogInformation("[BotImprover] GetPartPosition Set Head");
+                return HookResult.Changed;
+            }
             return HookResult.Continue;
         }
         catch (Exception ex)
@@ -405,6 +437,26 @@ public class BotImprover : BasePlugin
                 Logger.LogInformation("[BotImprover] IsEnemyPartVisible Failed: " + ex.Message);
             }
             return false;
+        }
+    }
+
+    public Vector CCSBot_GetPartPosition_Get(CCSBot bot, CCSPlayerController player, VisiblePartType part)
+    {
+        try
+        {
+            var CCSBot_GetPartPosition_GetFunc = VirtualFunction.Create<nint, nint, VisiblePartType, Vector>(
+                "55 48 89 E5 41 55 41 54 53 48 89 FB 48 83 EC 48 8B 8F D8 70 00 00", Addresses.ServerPath
+            );
+
+            return CCSBot_GetPartPosition_GetFunc(bot.Handle, player.Handle, part);
+        }
+        catch (Exception ex)
+        {
+            if (ex.Message != "Invalid game event")
+            {
+                Logger.LogInformation("[BotImprover] GetPartPosition_Get Failed: " + ex.Message);
+            }
+            return new Vector(0, 0, 0);
         }
     }
 }
