@@ -42,7 +42,7 @@ public class BotImprover : BasePlugin
         new("55 48 89 E5 41 57 49 89 FF 41 56 45 89 C6 41 55 41 54 49 89 F4", Addresses.ServerPath);
 
     private MemoryFunctionVoid<nint> CCSBot_PickNewAimSpotFunc =
-        new("48 8D 35 ? ? ? ? 0F 11 4D ? 48 8D 3D ? ? ? ? 0F 11 4D ? 0F 11 4D ? 0F 11 4D ? E8 ? ? ? ? 48 8D 15 ? ? ? ? 48 8D 35 ? ? ? ? 48 8D 3D ? ? ? ? E8 ? ? ? ? 49 89 D8 41 BA ? ? ? ? BA ? ? ? ? 48 8D 0D ? ? ? ? 66 0F EF C9 66 0F EF C0 0F 11 4D ? 48 8D 35 ? ? ? ? 0F 11 4D ? 48 8D 3D ? ? ? ? 0F 11 4D ? 0F 11 4D ? 48 C7 45 ? ? ? ? ? 66 44 89 55 ? E8 ? ? ? ? 48 8D 15 ? ? ? ? 48 8D 35 ? ? ? ? 48 8D 3D ? ? ? ? E8 ? ? ? ? 49 89 D8", Addresses.ServerPath);
+        new("55 48 89 E5 41 57 41 56 41 55 41 54 53 48 83 EC 58 80 3D E8 38 1F 01 00", Addresses.ServerPath);
 
     //In CCSBot::Upkeep code bottom
     private MemoryFunctionWithReturn<float, float> BotCOSFunc =
