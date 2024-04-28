@@ -27,6 +27,16 @@ public enum PriorityType
     PRIORITY_UNINTERRUPTABLE
 };
 
+public enum VisiblePartType
+{
+    NONE = 0x00,
+    GUT = 0x01,
+    HEAD = 0x02,
+    LEFT_SIDE = 0x04,           ///< the left side of the object from our point of view (not their left side)
+    RIGHT_SIDE = 0x08,          ///< the right side of the object from our point of view (not their right side)
+    FEET = 0x10
+};
+
 public class BotImprover : BasePlugin
 {
     public override string ModuleName => "CS2 BotImprover Plugin";
@@ -55,8 +65,8 @@ public class BotImprover : BasePlugin
     //private MemoryFunctionVoid CCSBot_UpKeepFuncVoid =
     //    new("55 48 89 E5 41 57 41 56 41 55 41 54 49 89 FC 53 48 83 EC 38 4C 8B 2D 7D D9 FA 00", Addresses.ServerPath);
 
-    private MemoryFunctionWithReturn<nint, float> CCSBot_GetPartPositionFunc =
-        new("F3 0F 5C 05 D4 9E C1 00", Addresses.ServerPath);
+    private MemoryFunctionWithReturn<nint, nint, VisiblePartType, Vector> CCSBot_GetPartPositionFunc =
+        new("55 48 89 E5 41 57 41 56 41 55 41 54 49 89 F4 53 89 D3", Addresses.ServerPath);
 
     public override void Load(bool hotReload)
     {
@@ -67,12 +77,19 @@ public class BotImprover : BasePlugin
         {
             Logger.LogInformation("HIME BotImprover StartHook SetLookAt!");
             CCSBot_SetLookAtFunc.Hook(Hook_CCSBot_SetLookAt, HookMode.Pre);
+
             //Logger.LogInformation("HIME BotImprover StartHook BotCOS!");
             //BotCOSFunc.Hook(Hook_BotCOS, HookMode.Pre);
+
             //Logger.LogInformation("HIME BotImprover StartHook BotSIN!");
             //BotSINFunc.Hook(Hook_BotSIN, HookMode.Pre);
+
             Logger.LogInformation("HIME BotImprover StartHook PickNewAimSpot!");
             CCSBot_PickNewAimSpotFunc.Hook(Hook_CCSBot_PickNewAimSpot, HookMode.Post);
+
+            Logger.LogInformation("HIME BotImprover StartHook GetPartPosition!");
+            CCSBot_GetPartPositionFunc.Hook(Hook_CCSBot_GetPartPosition, HookMode.Pre);
+
             //CCSBot_UpKeepFuncVoid.Hook(Hook_CCSBot_UpKeepVoid, HookMode.Pre);
         }
         catch (Exception ex)
@@ -108,6 +125,31 @@ public class BotImprover : BasePlugin
                 Logger.LogInformation("[BotImprover] OnTick Failed: " + ex.Message);
             }
         }
+    }
+
+    private HookResult Hook_CCSBot_GetPartPosition(DynamicHook hook)
+    {
+        try
+        {
+            CCSBot bot = new CCSBot(hook.GetParam<nint>(0));
+            CCSPlayerController player = new CCSPlayerController(hook.GetParam<nint>(1));
+            Logger.LogInformation("[BotImprover] GetPartPosition Bot Get" + player.PlanerName);
+            if (CCSBot_IsEnemyPartVisible(bot, VisiblePartType.HEAD))
+            {
+                hook.SetParam<VisiblePartType>(3, VisiblePartType.HEAD);
+                Logger.LogInformation("[BotImprover] GetPartPosition Set Head");
+                return HookResult.Changed;
+            }
+            return HookResult.Continue;
+        }
+        catch (Exception ex)
+        {
+            if (ex.Message != "Invalid game event")
+            {
+                Logger.LogInformation("[BotImprover] GetPartPosition Failed: " + ex.Message);
+            }
+        }
+        return HookResult.Continue;
     }
 
     private HookResult Hook_CCSBot_PickNewAimSpot(DynamicHook hook)
@@ -345,22 +387,23 @@ public class BotImprover : BasePlugin
         return 0;
     }
 
-    public int CCSBot_GetPartPosition(CCSPlayerController player, string BoneName)
+    public bool CCSBot_IsEnemyPartVisible(CCSBot bot, VisiblePartType part)
     {
         try
         {
-            var LookupBoneFunc = VirtualFunction.Create<nint, string, int>(
-                "55 48 89 E5 41 57 41 56 41 55 41 54 49 89 F4 53 89 D3", Addresses.ServerPath
+            var CCSBot_IsEnemyPartVisibleFunc = VirtualFunction.Create<nint, VisiblePartType, bool>(
+                "55 48 89 E5 41 55 41 54 53 48 89 FB 48 83 EC 48 8B 8F D8 70 00 00", Addresses.ServerPath
             );
-            return LookupBoneFunc(player.Handle, BoneName);
+
+            return CCSBot_IsEnemyPartVisibleFunc(bot, part);
         }
         catch (Exception ex)
         {
             if (ex.Message != "Invalid game event")
             {
-                Logger.LogInformation("[BotImprover] LookupBone Failed: " + ex.Message);
+                Logger.LogInformation("[BotImprover] IsEnemyPartVisible Failed: " + ex.Message);
             }
+            return false;
         }
-        return 0;
     }
 }
