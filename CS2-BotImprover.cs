@@ -395,7 +395,7 @@ public class BotImprover : BasePlugin
                 "55 48 89 E5 41 55 41 54 53 48 89 FB 48 83 EC 48 8B 8F D8 70 00 00", Addresses.ServerPath
             );
 
-            return CCSBot_IsEnemyPartVisibleFunc(bot, part);
+            return CCSBot_IsEnemyPartVisibleFunc(bot.Handle, part);
         }
         catch (Exception ex)
         {
