@@ -214,7 +214,7 @@ public class BotImprover : BasePlugin
                 Vector fNadePos = hook.GetParam<Vector>(2);
                 Logger.LogInformation("[BotImprover] GrenadeThrow: " + fNadePos.X + " " + fNadePos.Y + " " + fNadePos.Z);
                 Vector nNadePos = new Vector(0, 0, 0);
-                bool finish = CCSBot_BendLineOfSight(bot, bot.EyePosition, fNadePos, ref nNadePos, 135.0f);
+                bool finish = CCSBot_BendLineOfSight(bot, bot.EyePosition, fNadePos, nNadePos, 135.0f);
                 if (finish)
                     Logger.LogInformation("[BotImprover] GrenadeThrow Bend finish");
                 Logger.LogInformation("[BotImprover] GrenadeThrow Bend: " + nNadePos.X + " " + nNadePos.Y + " " + nNadePos.Z);
@@ -265,7 +265,7 @@ public class BotImprover : BasePlugin
         return HookResult.Continue;
     }
 
-    public bool CCSBot_BendLineOfSight(CCSBot bot, Vector Eye, Vector Point, ref Vector Bend, float AngleLimit)
+    public bool CCSBot_BendLineOfSight(CCSBot bot, Vector Eye, Vector Point, Vector Bend, float AngleLimit)
     {
         try
         {
