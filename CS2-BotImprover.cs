@@ -129,7 +129,7 @@ public class BotImprover : BasePlugin
     {
         try
         {
-            await Server.NextFrameAsync(() =>
+            Server.NextFrame(() =>
             {
                 CCSBot bot = new CCSBot(hook.GetParam<nint>(0));
                 CCSPlayerController player = new CCSPlayerController(hook.GetParam<nint>(1));
@@ -140,8 +140,8 @@ public class BotImprover : BasePlugin
                     Logger.LogInformation("[BotImprover] GetPartPosition Set Head");
                     return HookResult.Changed;
                 }
-                return HookResult.Continue;
             });
+            return HookResult.Continue;
         }
         catch (Exception ex)
         {
