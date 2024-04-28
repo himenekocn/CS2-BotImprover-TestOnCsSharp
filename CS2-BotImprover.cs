@@ -132,7 +132,7 @@ public class BotImprover : BasePlugin
         {
             CCSBot bot = new CCSBot(hook.GetParam<nint>(0));
             //CCSPlayerPawn getplayer = bot.Enemy;
-            CCSPlayerController getplayer = bot.Enemy.Controller.Value;
+            CCSPlayerController getplayer = bot.Enemy.PlayerPawn.Controller.Value;
             if(getplayer.IsValid)
             {
                 Logger.LogInformation("[BotImprover] CCSBot_UpKeep player Valid");
@@ -143,7 +143,7 @@ public class BotImprover : BasePlugin
                     {
                         Logger.LogInformation("[BotImprover] CCSBot_UpKeep player GetNewAim");
                         Vector NewSpot = CCSBot_GetPartPosition_Get(bot, getplayer, VisiblePartType.HEAD);
-                        Schema.SetSchemaValue(getbot.Handle, "CCSBot", "m_targetSpot", NewSpot);
+                        Schema.SetSchemaValue(bot.Handle, "CCSBot", "m_targetSpot", NewSpot);
                         return HookResult.Handled;
                     }
                 }
