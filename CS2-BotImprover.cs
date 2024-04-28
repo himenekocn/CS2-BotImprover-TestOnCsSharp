@@ -143,6 +143,7 @@ public class BotImprover : BasePlugin
                     {
                         Logger.LogInformation("[BotImprover] CCSBot_UpKeep player GetNewAim");
                         Vector NewSpot = CCSBot_GetPartPosition_Get(bot, getplayer, VisiblePartType.HEAD);
+                        Logger.LogInformation("[BotImprover] CCSBot_UpKeep player GetNewAimPos: " + NewSpot.X + " " + NewSpot.Y + " " + NewSpot.Z);
                         Schema.SetSchemaValue(bot.Handle, "CCSBot", "m_targetSpot", NewSpot);
                         return HookResult.Handled;
                     }
