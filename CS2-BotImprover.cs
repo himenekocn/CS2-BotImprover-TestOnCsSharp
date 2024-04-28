@@ -133,7 +133,7 @@ public class BotImprover : BasePlugin
         {
             CCSBot bot = new CCSBot(hook.GetParam<nint>(0));
             CCSPlayerController player = new CCSPlayerController(hook.GetParam<nint>(1));
-            Logger.LogInformation("[BotImprover] GetPartPosition Bot Get" + player.PlanerName);
+            Logger.LogInformation("[BotImprover] GetPartPosition Bot Get" + player.PlayerName);
             if (CCSBot_IsEnemyPartVisible(bot, VisiblePartType.HEAD))
             {
                 hook.SetParam<VisiblePartType>(3, VisiblePartType.HEAD);
