@@ -129,10 +129,7 @@ public class BotImprover : BasePlugin
     {
         try
         {
-            hook.SetParam<VisiblePartType>(3, VisiblePartType.HEAD);
-            Logger.LogInformation("[BotImprover] GetPartPosition Set Head");
-            return HookResult.Changed;
-            /*
+            
             CCSBot bot = new CCSBot(hook.GetParam<nint>(0));
             CCSPlayerController player = new CCSPlayerController(hook.GetParam<nint>(1));
             Logger.LogInformation("[BotImprover] GetPartPosition Bot Get" + player.PlayerName);
@@ -140,9 +137,9 @@ public class BotImprover : BasePlugin
             {
                 hook.SetParam<VisiblePartType>(3, VisiblePartType.HEAD);
                 Logger.LogInformation("[BotImprover] GetPartPosition Set Head");
-                return HookResult.Changed;
+                //return HookResult.Changed;
             }
-            return HookResult.Continue;*/
+            return HookResult.Continue;
         }
         catch (Exception ex)
         {
