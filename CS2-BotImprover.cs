@@ -97,9 +97,8 @@ public class BotImprover : BasePlugin
             foreach (var bot in Utilities.GetPlayers().Where(bot => bot is { IsValid: true, IsBot: true, PawnIsAlive: true, IsHLTV: false }))
             {
                 CCSBot getbot = bot.PlayerPawn.Value!.Bot;
-                Schema.SetSchemaValue(getbot.Handle, "CCSBot", "m_targetSpot", new Vector(120, 120, 120));
-                Vector GetSpot = getbot.LookAtSpot;
-                Logger.LogInformation("[BotImprover] OnTick Spot: " + GetSpot.X + " " + GetSpot.Y + " " + GetSpot.Z);
+                Schema.SetSchemaValue(getbot.Handle, "CCSBot", "m_targetSpot", new Vector(10f, 10f, 10f));
+                Logger.LogInformation("[BotImprover] OnTick Spot: " + getbot.LookAtSpot.X + " " + getbot.LookAtSpot.Y + " " + getbot.LookAtSpot.Z);
             }
         }
         catch (Exception ex)
