@@ -132,11 +132,11 @@ public class BotImprover : BasePlugin
         {
             CCSBot bot = new CCSBot(hook.GetParam<nint>(0));
             CCSPlayerPawn getplayerpawn = bot.Enemy.Value;
-            if(getplayerpawn.IsValid)
+            if (getplayerpawn.IsValid)
             {
                 CCSPlayerController getplayer = getplayerpawn.OriginalController.Value;
                 Logger.LogInformation("[BotImprover] CCSBot_UpKeep player Valid");
-                if(bot.IsEnemyVisible)
+                if (bot.IsEnemyVisible)
                 {
                     Logger.LogInformation("[BotImprover] CCSBot_UpKeep player IsEnemyVisible");
                     if (CCSBot_IsEnemyPartVisible(bot, VisiblePartType.HEAD))
@@ -450,11 +450,11 @@ public class BotImprover : BasePlugin
     {
         try
         {
-            var CCSBot_GetPartPosition_GetFunc = VirtualFunction.Create<nint, nint, VisiblePartType, Vector>(
+            var CCSBot_GetPartPosition_GetFunc = VirtualFunction.Create<nint, CCSPlayerController, VisiblePartType, Vector>(
                 "55 48 89 E5 41 57 41 56 41 55 41 54 49 89 F4 53 89 D3", Addresses.ServerPath
             );
 
-            return CCSBot_GetPartPosition_GetFunc(bot.Handle, player.Handle, part);
+            return CCSBot_GetPartPosition_GetFunc(bot.Handle, player, part);
         }
         catch (Exception ex)
         {
