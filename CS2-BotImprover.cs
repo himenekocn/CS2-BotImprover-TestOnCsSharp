@@ -129,17 +129,19 @@ public class BotImprover : BasePlugin
     {
         try
         {
-            
-            CCSBot bot = new CCSBot(hook.GetParam<nint>(0));
-            CCSPlayerController player = new CCSPlayerController(hook.GetParam<nint>(1));
-            Logger.LogInformation("[BotImprover] GetPartPosition Bot Get" + player.PlayerName);
-            if (CCSBot_IsEnemyPartVisible(bot, VisiblePartType.HEAD))
+            await Server.NextFrameAsync(() =>
             {
-                hook.SetParam<VisiblePartType>(3, VisiblePartType.HEAD);
-                Logger.LogInformation("[BotImprover] GetPartPosition Set Head");
-                //return HookResult.Changed;
-            }
-            return HookResult.Continue;
+                CCSBot bot = new CCSBot(hook.GetParam<nint>(0));
+                CCSPlayerController player = new CCSPlayerController(hook.GetParam<nint>(1));
+                Logger.LogInformation("[BotImprover] GetPartPosition Bot Get" + player.PlayerName);
+                if (CCSBot_IsEnemyPartVisible(bot, VisiblePartType.HEAD))
+                {
+                    hook.SetParam<VisiblePartType>(3, VisiblePartType.HEAD);
+                    Logger.LogInformation("[BotImprover] GetPartPosition Set Head");
+                    return HookResult.Changed;
+                }
+                return HookResult.Continue;
+            });
         }
         catch (Exception ex)
         {
