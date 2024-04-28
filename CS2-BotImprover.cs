@@ -42,7 +42,8 @@ public class BotImprover : BasePlugin
         new("55 48 89 E5 41 57 49 89 FF 41 56 45 89 C6 41 55 41 54 49 89 F4", Addresses.ServerPath);
 
     private MemoryFunctionVoid<nint> CCSBot_PickNewAimSpotFunc =
-        new("55 48 89 E5 41 57 41 56 41 55 41 54 53 48 83 EC 58 80 3D E8 38 1F 01 00", Addresses.ServerPath);
+        new("55 48 89 E5 41 57 4D 89 C7 41 56 49 89 F6 BE FF FF FF FF 41 55 49 89 FD 41 54 4D 89 CC", Addresses.ServerPath);
+    //new("55 48 89 E5 41 57 41 56 41 55 41 54 53 48 83 EC 58 80 3D E8 38 1F 01 00", Addresses.ServerPath);
 
     //In CCSBot::Upkeep code bottom
     private MemoryFunctionWithReturn<float, float> BotCOSFunc =
@@ -53,6 +54,9 @@ public class BotImprover : BasePlugin
 
     //private MemoryFunctionVoid CCSBot_UpKeepFuncVoid =
     //    new("55 48 89 E5 41 57 41 56 41 55 41 54 49 89 FC 53 48 83 EC 38 4C 8B 2D 7D D9 FA 00", Addresses.ServerPath);
+
+    private MemoryFunctionWithReturn<nint, float> CCSBot_GetPartPositionFunc =
+        new("F3 0F 5C 05 D4 9E C1 00", Addresses.ServerPath);
 
     public override void Load(bool hotReload)
     {
@@ -90,6 +94,13 @@ public class BotImprover : BasePlugin
     {
         try
         {
+            foreach (var bot in Utilities.GetPlayers().Where(bot => bot is { IsValid: true, IsBot: true, PawnIsAlive: true, IsHLTV: false }))
+            {
+                CCSBot getbot = bot.PlayerPawn.Value!.Bot;
+                Schema.SetSchemaValue(getbot.Handle, "CCSBot", "m_targetSpot", new Vector(120, 120, 120));
+                Vector GetSpot = getbot.LookAtSpot;
+                Logger.LogInformation("[BotImprover] OnTick Spot: " + GetSpot.X + " " + GetSpot.Y + " " + GetSpot.Z);
+            }
         }
         catch (Exception ex)
         {
@@ -105,7 +116,8 @@ public class BotImprover : BasePlugin
         Logger.LogInformation("[BotImprover] CCSBot_PickNewAimSpot run ");
         try
         {
-            CCSBot bot = new CCSBot(hook.GetParam<nint>(0));
+            CCSPlayerController player = new CCSPlayerController(hook.GetParam<nint>(0));
+            CCSBot bot = player.PlayerPawn.Value!.Bot;
             Logger.LogInformation("[BotImprover] CCSBot_PickNewAimSpot Get: " + bot.Name);
             Schema.SetSchemaValue(bot.Handle, "CCSBot", "m_targetSpot", new Vector(120, 120, 120));
             return HookResult.Handled;
@@ -321,6 +333,25 @@ public class BotImprover : BasePlugin
         {
             var LookupBoneFunc = VirtualFunction.Create<nint, string, int>(
                 "55 48 89 E5 41 57 41 56 41 55 41 54 53 48 BB 00 00 C0 7F 00 00 C0 7F", Addresses.ServerPath
+            );
+            return LookupBoneFunc(player.Handle, BoneName);
+        }
+        catch (Exception ex)
+        {
+            if (ex.Message != "Invalid game event")
+            {
+                Logger.LogInformation("[BotImprover] LookupBone Failed: " + ex.Message);
+            }
+        }
+        return 0;
+    }
+
+    public int CCSBot_GetPartPosition(CCSPlayerController player, string BoneName)
+    {
+        try
+        {
+            var LookupBoneFunc = VirtualFunction.Create<nint, string, int>(
+                "55 48 89 E5 41 57 41 56 41 55 41 54 49 89 F4 53 89 D3", Addresses.ServerPath
             );
             return LookupBoneFunc(player.Handle, BoneName);
         }
